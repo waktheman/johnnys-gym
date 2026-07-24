@@ -59,6 +59,9 @@ a { color: inherit; text-decoration: none; }
 h1.display { font-size: clamp(1.85rem, 4.8vw, 3.9rem); }
 h2.display { font-size: clamp(1.35rem, 3vw, 2.4rem); }
 
+/* Accent-coloured word inside a heading. */
+.hl { color: var(--accent); }
+
 .eyebrow {
   font-size: 0.7rem;
   font-weight: 600;
@@ -630,7 +633,12 @@ body.menu-open .mobile-menu { display: flex; }
   line-height: 1;
   margin-block: 0.5rem 0.4rem;
 }
-.plan-cur { font-size: 1.1rem; color: var(--accent); }
+/* Michroma has no euro glyph (renders as a box), so set the symbol in Poppins. */
+.plan-cur {
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  color: var(--accent);
+}
 .plan-amount { font-size: clamp(2rem, 3.4vw, 2.7rem); }
 .plan-per {
   font-family: "Poppins", sans-serif;
@@ -844,6 +852,14 @@ html.motion-on .supp-track { animation: reviewScroll 34s linear infinite; }
 @media (max-width: 1024px) {
   .approach-grid { grid-template-columns: 1fr; }
   .approach-head { position: static; margin-bottom: 0.5rem; }
+}
+
+/* On phones these three section headings read better centred. */
+@media (max-width: 768px) {
+  .gym-intro { text-align: center; }
+  .gym-lede { margin-inline: auto; }
+  #equipment > .container > .section-title { text-align: center; }
+  .approach-head { text-align: center; }
 }
 
 @media (max-width: 860px) {
