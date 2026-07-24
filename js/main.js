@@ -3,21 +3,36 @@
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Background videos: hold on the poster frame when the visitor prefers less
-     motion, otherwise play only while on screen (saves battery and bandwidth). */
-  document.querySelectorAll("video[data-bg], #hero-video, #quote-video").forEach((video) => {
-    if (reduceMotion) {
-      video.autoplay = false;
-      video.removeAttribute("autoplay");
-      video.pause();
-      return;
-    }
-    const play = () => video.play().catch(() => {});
+  /* Background videos: play whenever on screen, pause when off (saves battery
+     and data). Muted + playsinline lets this autoplay on most mobile browsers. */
+  const videos = [...document.querySelectorAll("video[data-bg], #hero-video, #quote-video")];
+  const inView = (el) => {
+    const r = el.getBoundingClientRect();
+    return r.top < window.innerHeight && r.bottom > 0;
+  };
+  const tryPlay = (v) => {
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  };
+  videos.forEach((v) => {
     new IntersectionObserver(
-      ([entry]) => (entry.isIntersecting ? play() : video.pause()),
+      ([entry]) => (entry.isIntersecting ? tryPlay(v) : v.pause()),
       { threshold: 0.1 }
-    ).observe(video);
+    ).observe(v);
   });
+
+  /* Some phones block autoplay and freeze CSS loops (iOS Low Power Mode, or the
+     Reduce Motion setting). The first time the visitor touches, clicks, scrolls
+     or types, turn everything on. */
+  const kickstart = () => {
+    document.documentElement.classList.add("motion-on");
+    videos.forEach((v) => {
+      if (inView(v)) tryPlay(v);
+    });
+  };
+  ["pointerdown", "touchstart", "click", "keydown", "scroll"].forEach((evt) =>
+    window.addEventListener(evt, kickstart, { once: true, passive: true })
+  );
 
   /* Nav background once the hero top is out of view */
   const nav = document.querySelector(".site-nav");

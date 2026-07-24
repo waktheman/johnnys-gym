@@ -812,10 +812,6 @@ body.menu-open .mobile-menu { display: flex; }
   }
 
   .marquee-track { animation: marquee 30s linear infinite; }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
 
   .reveal {
     opacity: 0;
@@ -826,10 +822,22 @@ body.menu-open .mobile-menu { display: flex; }
   .reveal.in { opacity: 1; transform: none; }
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* First user interaction (tap, click, scroll or key) sets .motion-on on <html>
+   and force-starts every loop, even on phones with Reduce Motion or Low Power
+   Mode, which otherwise freeze all of this. */
+html.motion-on .marquee-track { animation: marquee 30s linear infinite; }
+html.motion-on .mq-track { animation: reviewScroll var(--dur, 52s) linear infinite; }
+html.motion-on .supp-track { animation: reviewScroll 34s linear infinite; }
 
 /* ---------- Responsive ---------- */
 
