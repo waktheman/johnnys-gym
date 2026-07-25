@@ -2,6 +2,34 @@
   "use strict";
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
+  /* Lenis smooth momentum scrolling. Desktop pointers only: phones keep their
+     native touch scroll (which already has momentum), and anyone who asked for
+     reduced motion is left alone. */
+  let lenis = null;
+  if (!reduceMotion && !isTouch && typeof Lenis !== "undefined") {
+    lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    const raf = (time) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+
+    /* In-page anchor links glide instead of jumping, offset for the fixed nav. */
+    const navH =
+      parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h"), 10) || 72;
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener("click", (e) => {
+        const id = a.getAttribute("href");
+        if (id.length <= 1) return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: -(navH + 8) });
+      });
+    });
+  }
 
   /* Background videos: play whenever on screen, pause when off (saves battery
      and data). Muted + playsinline lets this autoplay on most mobile browsers. */
@@ -51,6 +79,7 @@
       menuBtn.setAttribute("aria-expanded", String(open));
       menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       document.body.style.overflow = open ? "hidden" : "";
+      if (lenis) open ? lenis.stop() : lenis.start();
     };
     menuBtn.addEventListener("click", () =>
       setOpen(!document.body.classList.contains("menu-open"))

@@ -26,6 +26,13 @@ html {
   scroll-padding-top: calc(var(--nav-h) + 12px);
 }
 
+/* Lenis smooth-scroll helper styles (desktop only; see js/main.js). */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+/* (Deliberately not disabling iframe pointer-events, so the map stays interactive.) */
+
 body {
   background: var(--bg);
   color: var(--text);
@@ -33,7 +40,8 @@ body {
   font-size: 1rem;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* clip (not hidden) so it doesn't become a scroll container that fights Lenis */
+  overflow-x: clip;
 }
 
 img { display: block; max-width: 100%; }
@@ -823,8 +831,8 @@ body.menu-open .mobile-menu { display: flex; }
 
   .reveal {
     opacity: 0;
-    transform: translateY(26px);
-    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    transform: translateY(32px);
+    transition: opacity 0.85s var(--ease), transform 0.9s var(--ease);
     transition-delay: var(--d, 0ms);
   }
   .reveal.in { opacity: 1; transform: none; }
