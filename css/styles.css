@@ -393,25 +393,30 @@ body.menu-open .mobile-menu { display: flex; }
 
 #approach { background: var(--surface); }
 
+/* Two-by-two grid of big numbered blocks, so the section fills the space. */
 .approach-grid {
+  list-style: none;
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: clamp(2.5rem, 6vw, 5rem);
-  align-items: start;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem) clamp(2.5rem, 6vw, 6rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
 }
-.approach-head { position: sticky; top: calc(var(--nav-h) + 2rem); }
-
-.approach-list { list-style: none; display: grid; }
-.approach-list li {
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  gap: 1.2rem;
-  border-top: 1px solid var(--line);
-  padding-block: 1.9rem;
+.approach-item { display: block; }
+.approach-n {
+  display: block;
+  font-size: clamp(2.8rem, 6.5vw, 5rem);
+  line-height: 1;
+  color: var(--text);
+  padding-bottom: clamp(1.1rem, 2.2vw, 1.7rem);
+  margin-bottom: clamp(1.1rem, 2.2vw, 1.7rem);
+  border-bottom: 1px solid var(--line);
 }
-.approach-num { color: var(--accent); font-size: 1.05rem; padding-top: 0.25rem; }
-.approach-list h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.35rem; }
-.approach-list p { color: var(--muted); font-size: 0.95rem; max-width: 52ch; }
+.approach-item h3 {
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+.approach-item p { color: var(--muted); font-size: 0.95rem; line-height: 1.65; max-width: 44ch; }
 
 /* ---------- Reviews (continuous marquee) ---------- */
 
@@ -857,17 +862,17 @@ html.motion-on .supp-track { animation: reviewScroll 34s linear infinite; }
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1024px) {
-  .approach-grid { grid-template-columns: 1fr; }
-  .approach-head { position: static; margin-bottom: 0.5rem; }
-}
-
-/* On phones these three section headings read better centred. */
+/* On phones these section headings read better centred. */
 @media (max-width: 768px) {
   .gym-intro { text-align: center; }
   .gym-lede { margin-inline: auto; }
   #equipment > .container > .section-title { text-align: center; }
-  .approach-head { text-align: center; }
+  #approach > .container > .section-title { text-align: center; }
+}
+
+/* Approach grid collapses to a single column only on phones. */
+@media (max-width: 600px) {
+  .approach-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 860px) {

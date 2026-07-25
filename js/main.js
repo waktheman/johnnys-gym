@@ -89,7 +89,15 @@
     );
   }
 
-  /* Stagger delays inside grouped grids */
+  /* ----------------------------------------------------------------
+     Reusable scroll-reveal utility
+     ----------------------------------------------------------------
+     - Add class "reveal" to any element: it fades + slides up as it
+       enters the viewport (see the .reveal rules in styles.css).
+     - Add attribute "data-stagger" to a PARENT: its direct children
+       cascade in one after another instead of all at once.
+     - Honors prefers-reduced-motion (content shown instantly, no motion).
+     ---------------------------------------------------------------- */
   document.querySelectorAll("[data-stagger]").forEach((group) => {
     [...group.children].forEach((child, i) =>
       child.style.setProperty("--d", `${i * 90}ms`)
@@ -130,7 +138,9 @@
     });
   }
 
-  /* Scroll reveals */
+  /* Scroll reveals: fire once, a little before the element is fully in view
+     (the -12% bottom margin waits until it is ~12% into the viewport so it
+     feels intentional rather than triggering right at the edge). */
   const revealEls = document.querySelectorAll(".reveal");
   if (revealEls.length && !reduceMotion) {
     const io = new IntersectionObserver(
@@ -142,7 +152,7 @@
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" }
+      { threshold: 0, rootMargin: "0px 0px -12% 0px" }
     );
     revealEls.forEach((el) => io.observe(el));
   } else {
