@@ -458,6 +458,8 @@ body.menu-open .mobile-menu { display: flex; }
   align-content: start;
   gap: 0.9rem;
 }
+.rv-top { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
+.rv-g { width: 20px; height: 20px; flex-shrink: 0; }
 .rv-stars { color: var(--accent); letter-spacing: 0.18em; font-size: 0.85rem; }
 .rv-quote { font-size: 0.95rem; line-height: 1.6; color: var(--text); }
 .rv-foot { display: flex; align-items: center; gap: 0.7rem; margin-top: 0.2rem; }
@@ -725,7 +727,57 @@ body.menu-open .mobile-menu { display: flex; }
   gap: 0.8rem;
 }
 
+/* ---------- FAQ ---------- */
+
+.faq { max-width: 720px; margin-top: clamp(2rem, 4vw, 3rem); }
+.faq details { border-top: 1px solid var(--line); padding: 1.15rem 0; }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 500;
+  font-size: clamp(0.98rem, 1.4vw, 1.1rem);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq-plus {
+  color: var(--accent);
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease);
+}
+.faq details[open] .faq-plus { transform: rotate(45deg); }
+.faq details p { color: var(--muted); font-size: 0.95rem; line-height: 1.65; margin-top: 0.7rem; max-width: 62ch; }
+
 /* ---------- Visit ---------- */
+
+/* Live open/closed status (populated by main.js from the hours). */
+.open-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.55rem 1.05rem;
+  font-size: 0.9rem;
+  background: var(--surface-2);
+}
+.open-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--muted);
+}
+.open-badge.is-open .open-dot { background: #3ad07a; box-shadow: 0 0 0 4px rgba(58, 208, 122, 0.15); }
+.open-badge.is-closed .open-dot { background: var(--accent); box-shadow: 0 0 0 4px rgba(240, 68, 56, 0.15); }
+.open-badge strong { font-weight: 600; }
+.open-badge .open-sub { color: var(--muted); }
 
 #visit { background: var(--surface); }
 

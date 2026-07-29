@@ -181,6 +181,61 @@
     reviewsTrack.appendChild(copy);
   }
 
+  /* Live open / closed badge, computed from the opening hours.
+     hours[day] = list of [openH, openM, closeH, closeM]; day 0 = Sunday. */
+  const badge = document.getElementById("open-badge");
+  const badgeText = document.getElementById("open-text");
+  if (badge && badgeText) {
+    const hours = {
+      0: [[10, 0, 14, 0]],
+      1: [[6, 0, 22, 15]],
+      2: [[6, 0, 22, 15]],
+      3: [[6, 0, 22, 15]],
+      4: [[6, 0, 22, 15]],
+      5: [[6, 0, 22, 15]],
+      6: [[9, 0, 17, 0]],
+    };
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const pad = (n) => String(n).padStart(2, "0");
+    const updateBadge = () => {
+      const now = new Date();
+      const day = now.getDay();
+      const mins = now.getHours() * 60 + now.getMinutes();
+      let openNow = false;
+      let closeStr = "";
+      (hours[day] || []).forEach(([oh, om, ch, cm]) => {
+        if (mins >= oh * 60 + om && mins < ch * 60 + cm) {
+          openNow = true;
+          closeStr = pad(ch) + ":" + pad(cm);
+        }
+      });
+      badge.hidden = false;
+      if (openNow) {
+        badge.className = "open-badge is-open in";
+        badgeText.innerHTML = "<strong>Open now</strong> <span class='open-sub'>&middot; closes " + closeStr + "</span>";
+        return;
+      }
+      // find the next opening slot within the coming week
+      let next = null;
+      for (let i = 0; i < 8 && !next; i++) {
+        const d = (day + i) % 7;
+        for (const [oh, om] of hours[d] || []) {
+          if (i > 0 || oh * 60 + om > mins) {
+            const when = i === 0 ? "today" : i === 1 ? "tomorrow" : days[d];
+            next = when + " " + pad(oh) + ":" + pad(om);
+            break;
+          }
+        }
+      }
+      badge.className = "open-badge is-closed in";
+      badgeText.innerHTML = next
+        ? "<strong>Closed</strong> <span class='open-sub'>&middot; opens " + next + "</span>"
+        : "<strong>Closed</strong>";
+    };
+    updateBadge();
+    setInterval(updateBadge, 30000);
+  }
+
   /* Footer year */
   const year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
